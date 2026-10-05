@@ -11,6 +11,7 @@ import pandas as pd
 logging.basicConfig(level=logging.INFO, format="%(asctime)-15s %(message)s")
 logger = logging.getLogger()
 
+
 # DO NOT MODIFY
 def go(args):
 
@@ -18,7 +19,6 @@ def go(args):
     run.config.update(args)
 
     # Download input artifact. This will also log that this script is using this
-    
     run = wandb.init(project="nyc_airbnb", group="cleaning", save_code=True)
     artifact_local_path = run.use_artifact(args.input_artifact).file()
     df = pd.read_csv(artifact_local_path)
@@ -36,7 +36,8 @@ def go(args):
     # Only implement this step when reaching Step 6: Pipeline Release and Updates
     # in the project.
     # Add longitude and latitude filter to allow test_proper_boundaries to pass
-    # ENTER CODE HERE
+    idx = df['longitude'].between(-74.25, -73.50) & df['latitude'].between(40.5, 41.2)
+    df = df[idx].copy()
 
     # Save the cleaned data
     df.to_csv('clean_sample.csv', index=False)
